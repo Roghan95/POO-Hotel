@@ -2,12 +2,14 @@
 
 class Chambre
 {
+    private Hotel $hotel;
     private string $numero;
     private int $prix;
     private bool $etat;
     private bool $wifi;
     private array $reservation;
-    private Hotel $hotel;
+
+    // Constructeur ----------------------------------------
 
     public function __construct(string $numero, int $prix, bool $wifi, bool $etat, Hotel $hotel)
     {
@@ -16,9 +18,10 @@ class Chambre
         $this->wifi = $wifi;
         $this->etat = $etat;
         $this->hotel = $hotel;
+        $this->etat = true;
     }
 
-    // Getters --------------------
+    // Getters ----------------------------------------
     public function getNumero(): string
     {
         return $this->numero;
@@ -44,7 +47,12 @@ class Chambre
         return $this->hotel;
     }
 
-    // Setters --------------------
+    public function getReservation(): array
+    {
+        return $this->reservation;
+    }
+
+    // Setters ----------------------------------------
 
     public function setNumero(string $numero): void
     {
@@ -71,5 +79,31 @@ class Chambre
         $this->hotel = $hotel;
     }
 
+    public function setReservation(array $reservation): void
+    {
+        $this->reservation = $reservation;
+    }
+    // ----------------------------------------------------------
+
     // Methods --------------------
+
+    public function __toString()
+    {
+        return $this->numero . ' ' . $this->prix . ' ' . $this->wifi . ' ' . $this->etat . ' ' . $this->hotel;
+    }
+
+    public function ajouterReservation(Reservation $reservation) // Ajoute une réservation à la chambre
+    {
+        $this->reservation[] = $reservation;
+    }
+
+    public function afficheReservation() // Affiche les réservations de la chambre
+    {
+        $resultat = "";
+        $reservation = $this->getReservation();
+        foreach ($this->reservation as $reservation) {
+            echo $reservation->getDateDebut()->format('d/m/Y') . ' - ' . $reservation->getDateFin()->format('d/m/Y') . ' : ' . $reservation->getClient()->getNom() . ' ' . $reservation->getClient()->getPrenom() . '<br>';
+        }
+        return $resultat;
+    }
 }
