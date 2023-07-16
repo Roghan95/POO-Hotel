@@ -11,9 +11,11 @@ class Reservation
     {
         $this->dateDebut = new DateTime($dateDebut);
         $this->dateFin = new DateTime($dateFin);
-        $this->dateFin = $dateFin;
         $this->client = $client;
         $this->chambre = $chambre;
+        $this->chambre->ajouterReservation($this);
+        $this->client->ajouterReservation($this);
+        $this->chambre->setEtat(false);
     }
 
     // Getters --------------------
@@ -40,25 +42,39 @@ class Reservation
 
     // Setters --------------------
 
-    public function setDateDebut(DateTime $dateDebut): void
+    public function setDateDebut(DateTime $dateDebut)
     {
         $this->dateDebut = $dateDebut;
     }
 
-    public function setDateFin(DateTime $dateFin): void
+    public function setDateFin(DateTime $dateFin)
     {
         $this->dateFin = $dateFin;
     }
 
-    public function setClient(Client $client): void
+    public function setClient(Client $client)
     {
         $this->client = $client;
     }
 
-    public function setChambre(Chambre $chambre): void
+    public function setChambre(Chambre $chambre)
     {
         $this->chambre = $chambre;
     }
 
     // // Methods --------------------
+
+    public function __toString()
+    {
+        return $this->getClient() . " - Chambre " . $this->getChambre()->getNumero() . " - depuis " . $this->getDateDebut()->format("d-m-Y") . " jusqu'à " . $this->getDateFin()->format("d-m-Y") . "<br>";
+    }
+    public function CalculPrixTotal()
+    {
+        $prix = $this->getChambre()->getPrix();
+        $dateDebut = $this->getDateDebut();
+        $dateFin = $this->getDateFin();
+        $nbJours = $dateDebut->diff($dateFin)->format("%a");
+        $prixTotal = $prix * $nbJours;
+        return $prixTotal;
+    }
 }

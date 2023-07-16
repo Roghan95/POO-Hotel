@@ -7,7 +7,7 @@ class Chambre
     private int $prix;
     private bool $etat;
     private bool $wifi;
-    private array $reservation;
+    private array $reservation = [];
 
     // Constructeur ----------------------------------------
 
@@ -16,9 +16,9 @@ class Chambre
         $this->numero = $numero;
         $this->prix = $prix;
         $this->wifi = $wifi;
-        $this->etat = $etat;
-        $this->hotel = $hotel;
         $this->etat = true;
+        $this->hotel = $hotel;
+        $this->hotel->ajouterChambre($this);
     }
 
     // Getters ----------------------------------------
@@ -54,55 +54,59 @@ class Chambre
 
     // Setters ----------------------------------------
 
-    public function setNumero(string $numero): void
+    public function setNumero(string $numero)
     {
         $this->numero = $numero;
     }
 
-    public function setPrix(int $prix): void
+    public function setPrix(int $prix)
     {
         $this->prix = $prix;
     }
 
-    public function setWifi(bool $wifi): void
+    public function setWifi(bool $wifi)
     {
         $this->wifi = $wifi;
     }
 
-    public function setEtat(bool $etat): void
+    public function setEtat(bool $etat)
     {
         $this->etat = $etat;
     }
 
-    public function setHotel(Hotel $hotel): void
+    public function setHotel(Hotel $hotel)
     {
         $this->hotel = $hotel;
     }
 
-    public function setReservation(array $reservation): void
+    public function setReservation(array $reservation)
     {
-        $this->reservation = $reservation;
+        $this->reservation[] = $reservation;
     }
     // ----------------------------------------------------------
 
-    // Methods --------------------
+    // Methods --------------------------------------------------
+
 
     public function __toString()
     {
         return $this->numero . ' ' . $this->prix . ' ' . $this->wifi . ' ' . $this->etat . ' ' . $this->hotel;
     }
 
-    public function ajouterReservation(Reservation $reservation) // Ajoute une réservation à la chambre
+
+    // Ajoute une réservation à la chambre
+    public function ajouterReservation(Reservation $reservation)
     {
         $this->reservation[] = $reservation;
     }
 
-    public function afficheReservation() // Affiche les réservations de la chambre
+    // Affiche les reservations de la chambre
+    public function afficherReservation()
     {
         $resultat = "";
-        $reservation = $this->getReservation();
-        foreach ($this->reservation as $reservation) {
-            echo $reservation->getDateDebut()->format('d/m/Y') . ' - ' . $reservation->getDateFin()->format('d/m/Y') . ' : ' . $reservation->getClient()->getNom() . ' ' . $reservation->getClient()->getPrenom() . '<br>';
+        $reservations = $this->getReservation();
+        foreach ($reservations as $reservation) {
+            $resultat .= $reservation->getClient() . " - Chambre " . $reservation->getChambre()->getNumero() . " - depuis " . $reservation->getDateDebut()->format("d-m-Y") . " jusqu'à " . $reservation->get_DateFin()->format("d-m-Y") . "<br>";
         }
         return $resultat;
     }
